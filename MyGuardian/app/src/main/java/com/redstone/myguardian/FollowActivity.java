@@ -32,6 +32,7 @@ import java.util.Map;
 public class FollowActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private int USER_ID;
+    private int PHONE_NR;
     Button btnRefresh;
     Button btnTrackView;
     private GoogleMap mapGoogle;
@@ -42,7 +43,7 @@ public class FollowActivity extends AppCompatActivity implements OnMapReadyCallb
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_follow);
         USER_ID= this.getIntent().getExtras().getInt("USER_ID");
-
+        PHONE_NR = this.getIntent().getExtras().getInt("PHONE_NR");
         final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
@@ -54,6 +55,7 @@ public class FollowActivity extends AppCompatActivity implements OnMapReadyCallb
             public void onClick(View view) {
                 Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
                 myIntent.putExtra("USER_ID",USER_ID);
+                myIntent.putExtra("PHONE_NR",PHONE_NR);
                 startActivity(myIntent);
 
             }

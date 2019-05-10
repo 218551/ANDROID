@@ -11,6 +11,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -45,6 +46,7 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
     private int USER_ID;
+    private int PHONE_NR;
 
     LocationManager locationManager;
     Button btnTrackView;
@@ -54,6 +56,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LocationListener listener;
     private int FINE_LOCATION_PERMISSION_CODE=1;
     private int COARSE_LOCATION_PERMISSION_CODE=2;
+    private int SMS_PERMISSION_CODE = 3;
+    private int READ_PHONE_STATE_PERMISSION_CODE=4;
     private GoogleMap mapGoogle;
     private Marker newmarker;
     @Override
@@ -61,11 +65,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
          USER_ID= this.getIntent().getExtras().getInt("USER_ID");
+         PHONE_NR = this.getIntent().getExtras().getInt("PHONE_NR");
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         btnTrackView = (Button) findViewById(R.id.button11);
         coordinates = (TextView) findViewById(R.id.textView4);
         btnRefresh = (Button) findViewById(R.id.button14);
+        btnSmsSend = (Button) findViewById(R.id.button12);
         final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
@@ -139,7 +145,35 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View view) {
                 Intent myIntent = new Intent(getApplicationContext(), FollowActivity.class);
                 myIntent.putExtra("USER_ID",USER_ID);
+                myIntent.putExtra("PHONE_NR",PHONE_NR);
                 startActivity(myIntent);
+
+            }
+        });
+
+        btnSmsSend.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (ContextCompat.checkSelfPermission(MainActivity.this,
+                        Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(MainActivity.this, "You have already granted SEND permission!",
+                            Toast.LENGTH_SHORT).show();
+                    if(ContextCompat.checkSelfPermission(MainActivity.this,
+                            Manifest.permission.READ_PHONE_STATE)==PackageManager.PERMISSION_GRANTED) {
+                        try {
+                            SmsManager.getDefault().sendTextMessage(Integer.toString(PHONE_NR), null, "JESTEM W NIEBEZPIECZENSTWIE!", null, null);
+                            Toast.makeText(getApplicationContext(), "Message Sent", Toast.LENGTH_LONG).show();
+                        } catch (Exception ex) {
+                            Toast.makeText(getApplicationContext(), ex.getMessage().toString(), Toast.LENGTH_LONG).show();
+                            ex.printStackTrace();
+                        }
+                    }else {
+                        requestReadPhoneStatePermission();
+                    }
+                } else {
+                    requestSendSmsPermission();
+
+                }
 
             }
         });
@@ -210,6 +244,67 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    private void requestReadPhoneStatePermission() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.READ_PHONE_STATE)) {
+
+            new AlertDialog.Builder(this)
+                    .setTitle("Permission needed")
+                    .setMessage("This permission is needed because of read phone state")
+                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ActivityCompat.requestPermissions(MainActivity.this,
+                                    new String[]{Manifest.permission.READ_PHONE_STATE}, READ_PHONE_STATE_PERMISSION_CODE);
+                        }
+
+                    })
+                    .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .create().show();
+
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_PHONE_STATE}, READ_PHONE_STATE_PERMISSION_CODE);
+        }
+    }
+
+    private void requestSendSmsPermission() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.SEND_SMS)) {
+
+            new AlertDialog.Builder(this)
+                    .setTitle("Permission needed")
+                    .setMessage("This permission is needed because of send sms")
+                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ActivityCompat.requestPermissions(MainActivity.this,
+                                    new String[]{Manifest.permission.SEND_SMS}, SMS_PERMISSION_CODE);
+                        }
+
+                    })
+                    .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .create().show();
+
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.SEND_SMS}, SMS_PERMISSION_CODE);
+        }
+    }
+
+
+
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
@@ -225,6 +320,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Toast.makeText(this, "COARSE_LOCATION Permission GRANTED", Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(this, "COARSE_LOCATION Permission DENIED", Toast.LENGTH_LONG).show();
+            }
+        }
+        if (requestCode == SMS_PERMISSION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "SEND_SMS Permission GRANTED", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "SEND_SMS Permission DENIED", Toast.LENGTH_LONG).show();
+            }
+        }
+        if (requestCode == READ_PHONE_STATE_PERMISSION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "READ_PHONE_STATE Permission GRANTED", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "READ_PHONE_STATE Permission DENIED", Toast.LENGTH_LONG).show();
             }
         }
     }

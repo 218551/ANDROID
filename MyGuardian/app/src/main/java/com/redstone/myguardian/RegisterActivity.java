@@ -31,6 +31,7 @@ public class RegisterActivity extends AppCompatActivity {
     EditText password;
     EditText myPhoneNr;
     EditText smePhoneNr;
+    EditText alarmPhoneNr;
     ProgressDialog mProgress;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,7 @@ public class RegisterActivity extends AppCompatActivity {
         password = (EditText) findViewById(R.id.editText4);
         myPhoneNr = (EditText) findViewById(R.id.editText5);
         smePhoneNr = (EditText) findViewById(R.id.editText6);
+        alarmPhoneNr = (EditText) findViewById(R.id.editText7);
 
         mProgress = new ProgressDialog(RegisterActivity.this);
         mProgress.setTitle("Processing...");
@@ -93,6 +95,7 @@ public class RegisterActivity extends AppCompatActivity {
                         params.put("password", password.getText().toString());
                         params.put("nrtel", myPhoneNr.getText().toString());
                         params.put("guardianof", smePhoneNr.getText().toString());
+                        params.put("guardedby", alarmPhoneNr.getText().toString());
                         return params;
                     }
                 };
