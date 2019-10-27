@@ -31,6 +31,7 @@ import java.util.Map;
 public class LoginActivity extends AppCompatActivity {
     private int USER_ID;
     private int PHONE_NR;
+    private String USERNAME;
 
     Button btnLogin;
     Button btnRegister;
@@ -68,12 +69,14 @@ public class LoginActivity extends AppCompatActivity {
                                     JSONObject jsonObject = new JSONObject(response);
                                     Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
                                     USER_ID = jsonObject.getInt("userid");
+                                    USERNAME = jsonObject.getString("username");
                                     PHONE_NR = jsonObject.getInt("phonenr");
 
                                     if(USER_ID!=0){
                                         Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
                                         myIntent.putExtra("USER_ID",USER_ID);
                                         myIntent.putExtra("PHONE_NR",PHONE_NR);
+                                        myIntent.putExtra("USERNAME",USERNAME);
                                         startActivity(myIntent);
                                     }
 

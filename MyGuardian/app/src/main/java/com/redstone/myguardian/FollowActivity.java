@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.content.Context;
 
@@ -36,12 +37,14 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class FollowActivity extends AppCompatActivity implements OnMapReadyCallback {
-
     private int USER_ID;
     private int PHONE_NR;
+    private String USERNAME;
+
     Button btnRefresh;
     Button btnTrackView;
     Button btnChooseUser;
+    TextView followName;
     private GoogleMap mapGoogle;
     private Marker newmarker;
     private boolean PAUSE_CTRL=false;
@@ -52,12 +55,14 @@ public class FollowActivity extends AppCompatActivity implements OnMapReadyCallb
         setContentView(R.layout.activity_follow);
         USER_ID= this.getIntent().getExtras().getInt("USER_ID");
         PHONE_NR = this.getIntent().getExtras().getInt("PHONE_NR");
+        USERNAME = this.getIntent().getExtras().getString("USERNAME");
         final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         final Context menuContener = new ContextThemeWrapper(this, R.style.MenuTheme);
         btnTrackView = (Button) findViewById(R.id.btnSwitchToCtrl);
         btnRefresh = (Button) findViewById(R.id.btnRefresh);
         btnChooseUser = (Button) findViewById(R.id.btnChooseUser);
+        followName = (TextView) findViewById(R.id.followName);
         btnChooseUser.setOnClickListener(new Button.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -65,7 +70,7 @@ public class FollowActivity extends AppCompatActivity implements OnMapReadyCallb
 
                 PopupMenu popupMenu = new PopupMenu(menuContener, btnChooseUser  );
                 popupMenu.getMenuInflater().inflate(R.menu.popup_menu, popupMenu.getMenu());
-
+                popupMenu.getMenu().add("some text");
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
@@ -85,6 +90,7 @@ public class FollowActivity extends AppCompatActivity implements OnMapReadyCallb
                 Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
                 myIntent.putExtra("USER_ID",USER_ID);
                 myIntent.putExtra("PHONE_NR",PHONE_NR);
+                myIntent.putExtra("USERNAME",USERNAME);
                 startActivity(myIntent);
 
             }
@@ -104,6 +110,7 @@ public class FollowActivity extends AppCompatActivity implements OnMapReadyCallb
                                     LatLng latLng = new LatLng(jsonObject.getDouble("geowidth"), jsonObject.getDouble("geolength") );
                                     mapGoogle.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                                     mapGoogle.animateCamera(CameraUpdateFactory.zoomTo(14));
+                                    followName.setText(jsonObject.getString("firstname")+" "+jsonObject.getString("lastname"));
                                     if(newmarker==null)
                                         newmarker = mapGoogle.addMarker(new MarkerOptions().position(latLng).title("Tracked person").icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
                                     newmarker.setPosition(latLng);
@@ -153,6 +160,7 @@ public class FollowActivity extends AppCompatActivity implements OnMapReadyCallb
                                     LatLng latLng = new LatLng(jsonObject.getDouble("geowidth"), jsonObject.getDouble("geolength") );
                                     mapGoogle.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                                     mapGoogle.animateCamera(CameraUpdateFactory.zoomTo(14));
+                                    followName.setText(jsonObject.getString("firstname")+" "+jsonObject.getString("lastname"));
                                     if(newmarker==null)
                                         newmarker = mapGoogle.addMarker(new MarkerOptions().position(latLng).title(latLng.toString()).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
                                     newmarker.setPosition(latLng);
@@ -200,13 +208,13 @@ public class FollowActivity extends AppCompatActivity implements OnMapReadyCallb
     protected void onPause() {
         super.onPause();
         PAUSE_CTRL=true;
-        Toast.makeText(getApplicationContext(),"Tracking disabled" ,Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(),"Tracking disabled" ,Toast.LENGTH_SHORT).show();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Toast.makeText(getApplicationContext(),"Tracking enabled" ,Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(),"Tracking enabled" ,Toast.LENGTH_SHORT).show();
         PAUSE_CTRL=false;
         locationTimerTask();
     }

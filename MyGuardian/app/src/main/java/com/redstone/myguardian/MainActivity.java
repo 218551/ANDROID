@@ -47,6 +47,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
     private int USER_ID;
     private int PHONE_NR;
+    private String USERNAME;
 
     LocationManager locationManager;
     Button btnTrackView;
@@ -66,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_main);
         USER_ID= this.getIntent().getExtras().getInt("USER_ID");
         PHONE_NR = this.getIntent().getExtras().getInt("PHONE_NR");
+        USERNAME = this.getIntent().getExtras().getString("USERNAME");
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         btnTrackView = (Button) findViewById(R.id.button11);
@@ -127,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Intent myIntent = new Intent(getApplicationContext(), FollowActivity.class);
                 myIntent.putExtra("USER_ID",USER_ID);
                 myIntent.putExtra("PHONE_NR",PHONE_NR);
+                myIntent.putExtra("USERNAME",USERNAME);
                 startActivity(myIntent);
 
             }
