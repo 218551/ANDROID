@@ -1,17 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/textView3"
-        android:layout_width="425dp"
-        android:layout_height="wrap_content"
-        android:text="TRACK VIEW"
-        android:fontFamily="serif"
+
+        android:id="@+id/viewTitle"
+        android:layout_width="match_parent"
+        android:layout_height="63dp"
+        android:background="@color/colorPrimary"
+        android:fontFamily="sans-serif-black"
+        android:gravity="center"
+        android:text="TRACK MODE"
+        android:textColor="#FFFFFF"
         android:textSize="20dp" />
 
     <fragment
@@ -25,26 +33,72 @@
         android:layout_height="match_parent">
 
         <Button
-            android:id="@+id/button11"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="switch to cotrol panel >>"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:id="@+id/btnChooseUser"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="8dp"
+            android:background="@color/colorPrimary"
+            android:text="Choose user to follow..."
+            android:textColor="#FFFFFF"
+            android:fontFamily="sans-serif"
+            android:layout_margin="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/followName"
+            tools:layout_editor_absoluteX="7dp" />
 
         <Button
-            android:id="@+id/button5"
+            android:id="@+id/btnSwitchToCtrl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@color/colorPrimary"
+            android:fontFamily="sans-serif"
+            android:padding="8dp"
+            android:layout_margin="8dp"
+            android:text="Switch to Control Panel"
+            android:textColor="#FFFFFF"
+            app:layout_constraintTop_toBottomOf="@+id/btnRefresh"
+            tools:layout_editor_absoluteX="0dp" />
+
+        <Button
+            android:id="@+id/btnRefresh"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@color/colorPrimary"
+            android:fontFamily="sans-serif"
+            android:padding="8dp"
+            android:layout_margin="8dp"
+            android:text="Refresh"
+            android:textColor="#FFFFFF"
+            app:layout_constraintTop_toBottomOf="@+id/btnChooseUser"
+            tools:layout_editor_absoluteX="28dp" />
+
+        <TextView
+            android:id="@+id/txt1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="161dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="162dp"
-            android:text="Refresh"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:text="Now Following:"
+            android:textSize="18dp"
+            android:layout_margin="8dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button11" />
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/followName"
+            android:layout_width="204dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:text="unknown name"
+            android:textSize="18dp"
+            android:layout_margin="8dp"
+            app:layout_constraintStart_toEndOf="@+id/txt1"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
     </android.support.constraint.ConstraintLayout>
 
 </LinearLayout>
+</ScrollView>

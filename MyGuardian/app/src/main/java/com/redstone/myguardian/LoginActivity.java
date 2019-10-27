@@ -44,8 +44,8 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         btnLogin = (Button) findViewById(R.id.button);
         btnRegister = (Button) findViewById(R.id.button2);
-        login = (EditText) findViewById(R.id.editText);
-        password = (EditText) findViewById(R.id.editText2);
+        login = (EditText) findViewById(R.id.inputLogin);
+        password = (EditText) findViewById(R.id.inputPassword);
 
         mProgress = new ProgressDialog(LoginActivity.this);
         mProgress.setTitle("Processing...");
@@ -89,6 +89,7 @@ public class LoginActivity extends AppCompatActivity {
                             public void onErrorResponse(VolleyError error) {
                                 Toast.makeText(getApplicationContext(),"Connection failure" ,Toast.LENGTH_LONG).show();
                                 error.printStackTrace();
+                                mProgress.dismiss();
                                 requestQueue.stop();
                             }
                         }

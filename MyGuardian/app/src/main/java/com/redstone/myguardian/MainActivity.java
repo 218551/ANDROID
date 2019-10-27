@@ -51,8 +51,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     LocationManager locationManager;
     Button btnTrackView;
     Button btnSmsSend;
-    Button btnRefresh;
-    TextView coordinates;
+
+
     private LocationListener listener;
     private int FINE_LOCATION_PERMISSION_CODE=1;
     private int COARSE_LOCATION_PERMISSION_CODE=2;
@@ -64,43 +64,41 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-         USER_ID= this.getIntent().getExtras().getInt("USER_ID");
-         PHONE_NR = this.getIntent().getExtras().getInt("PHONE_NR");
+        USER_ID= this.getIntent().getExtras().getInt("USER_ID");
+        PHONE_NR = this.getIntent().getExtras().getInt("PHONE_NR");
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         btnTrackView = (Button) findViewById(R.id.button11);
-        coordinates = (TextView) findViewById(R.id.textView4);
-        btnRefresh = (Button) findViewById(R.id.button14);
+
         btnSmsSend = (Button) findViewById(R.id.button12);
         final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
 
         if (ContextCompat.checkSelfPermission(MainActivity.this,
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(MainActivity.this, "You have already granted FINE_LOCATION permission!",
-                    Toast.LENGTH_SHORT).show();
-        }else {
-            requestFineLocationPermission();
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                     requestFineLocationPermission();
         }
+
         if (ContextCompat.checkSelfPermission(MainActivity.this,
                 Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(MainActivity.this, "You have already granted FINE_LOCATION permission!",
-                    Toast.LENGTH_SHORT).show();
-        }else {
-            requestCoarseLocationPermission();
+                    requestCoarseLocationPermission();
         }
+
+
+
+
 
         listener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                coordinates.setText( location.getLongitude() + " " + location.getLatitude());
                 LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude() );
                 mapGoogle.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                 mapGoogle.animateCamera(CameraUpdateFactory.zoomTo(14));
                 if(newmarker==null)
-                newmarker = mapGoogle.addMarker(new MarkerOptions().position(latLng).title("Your position").icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
+                newmarker = mapGoogle.addMarker(new MarkerOptions().position(latLng).title(location.getLongitude() + " " + location.getLatitude()).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
                 newmarker.setPosition(latLng);
+                newmarker.setTitle(location.getLongitude() + " " + location.getLatitude());
                 updateLocation(location);
             }
 
@@ -117,28 +115,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onProviderDisabled(String s) {
 
-                Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                startActivity(i);
+               // Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                //startActivity(i);
             }
         };
 
-
-        btnRefresh.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (ContextCompat.checkSelfPermission(MainActivity.this,
-                        Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(MainActivity.this, "ACCESS_FINE_LOCATION permission is granted!",
-                            Toast.LENGTH_SHORT).show();
-                    locationManager.requestLocationUpdates("gps", 60000, 0, listener);
-
-                } else {
-                    requestFineLocationPermission();
-
-                }
-
-            }
-        });
 
         btnTrackView.setOnClickListener(new Button.OnClickListener() {
             @Override
@@ -156,8 +137,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View view) {
                 if (ContextCompat.checkSelfPermission(MainActivity.this,
                         Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(MainActivity.this, "You have already granted SEND permission!",
-                            Toast.LENGTH_SHORT).show();
+
                     if(ContextCompat.checkSelfPermission(MainActivity.this,
                             Manifest.permission.READ_PHONE_STATE)==PackageManager.PERMISSION_GRANTED) {
                         try {
@@ -178,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-
+        locationManager.requestLocationUpdates("gps", 5000, 0, listener);
     }
 
     @Override
