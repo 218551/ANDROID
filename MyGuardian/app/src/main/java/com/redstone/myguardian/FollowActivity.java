@@ -28,6 +28,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -40,7 +41,6 @@ public class FollowActivity extends AppCompatActivity implements OnMapReadyCallb
     private int USER_ID;
     private int PHONE_NR;
     private String USERNAME;
-
     Button btnRefresh;
     Button btnTrackView;
     Button btnChooseUser;
@@ -48,7 +48,8 @@ public class FollowActivity extends AppCompatActivity implements OnMapReadyCallb
     private GoogleMap mapGoogle;
     private Marker newmarker;
     private boolean PAUSE_CTRL=false;
-
+    Context menuContener;
+    PopupMenu popupMenu;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,19 +59,20 @@ public class FollowActivity extends AppCompatActivity implements OnMapReadyCallb
         USERNAME = this.getIntent().getExtras().getString("USERNAME");
         final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        final Context menuContener = new ContextThemeWrapper(this, R.style.MenuTheme);
+
         btnTrackView = (Button) findViewById(R.id.btnSwitchToCtrl);
         btnRefresh = (Button) findViewById(R.id.btnRefresh);
         btnChooseUser = (Button) findViewById(R.id.btnChooseUser);
         followName = (TextView) findViewById(R.id.followName);
+
+        menuContener = new ContextThemeWrapper(this, R.style.MenuTheme);
+        popupMenu = new PopupMenu(menuContener, btnChooseUser );
+        loadFollowUsers();
+
         btnChooseUser.setOnClickListener(new Button.OnClickListener(){
             @Override
             public void onClick(View view) {
-
-
-                PopupMenu popupMenu = new PopupMenu(menuContener, btnChooseUser  );
                 popupMenu.getMenuInflater().inflate(R.menu.popup_menu, popupMenu.getMenu());
-                popupMenu.getMenu().add("some text");
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
@@ -196,6 +198,46 @@ public class FollowActivity extends AppCompatActivity implements OnMapReadyCallb
             }
         };
         timer.scheduleAtFixedRate(timerTask, 0,5000);
+    }
+
+    public void loadFollowUsers() {
+        final RequestQueue requestQueue = Volley.newRequestQueue(FollowActivity.this);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, DbConstants.URL_LOADFOLLOWUSERS,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            JSONArray usernameArray = jsonObject.getJSONArray("usernames");
+                            for(int i=0;i<usernameArray.length();i+=1)
+                            {
+                                String followUsername = usernameArray.getString(i);
+                                popupMenu.getMenu().add((followUsername));
+                            }
+                            requestQueue.stop();
+                        }catch(JSONException exc)
+                        {
+                            exc.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(),"Connection error from loadFollowUsers" ,Toast.LENGTH_LONG).show();
+                        error.printStackTrace();
+                        requestQueue.stop();
+                    }
+                }
+        ){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> params = new HashMap<>();
+                params.put("username", USERNAME);
+                return params;
+            }
+        };
+        requestQueue.add(stringRequest);
     }
 
     @Override
