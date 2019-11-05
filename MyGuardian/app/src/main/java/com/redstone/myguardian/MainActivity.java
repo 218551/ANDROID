@@ -1,6 +1,7 @@
 package com.redstone.myguardian;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -14,12 +15,14 @@ import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.content.pm.PackageManager;
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.app.ProgressDialog;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -52,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     LocationManager locationManager;
     Button btnTrackView;
     Button btnSmsSend;
-
+    Button btnAddFriend;
 
     private LocationListener listener;
     private int FINE_LOCATION_PERMISSION_CODE=1;
@@ -71,8 +74,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         btnTrackView = (Button) findViewById(R.id.button11);
-
         btnSmsSend = (Button) findViewById(R.id.button12);
+        btnAddFriend = (Button) findViewById(R.id.button13);
         final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
@@ -157,6 +160,27 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     requestSendSmsPermission();
 
                 }
+
+            }
+        });
+
+        btnAddFriend.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final EditText addEditText = new EditText(MainActivity.this);
+                AlertDialog dialog = new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("Add new friend")
+                        .setMessage("Type friends username bellow")
+                        .setView(addEditText)
+                        .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                addNewFriend(addEditText.getText().toString());
+                            }
+                        })
+                        .setNegativeButton("Cancel", null)
+                        .create();
+                dialog.show();
 
             }
         });
@@ -364,6 +388,43 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
+    void addNewFriend(final String username2) {
+        final RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, DbConstants.URL_ADDFRIEND,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
+                            requestQueue.stop();
+                        }catch(JSONException exc)
+                        {
+                            exc.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(),"Connection failure" ,Toast.LENGTH_LONG).show();
+                        error.printStackTrace();
+                        requestQueue.stop();
+                    }
+                }
+        ){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> params = new HashMap<>();
+                params.put("username1", USERNAME);
+                params.put("username2", username2);
+                return params;
+            }
+        };
+        requestQueue.add(stringRequest);
+
+
+    }
 }
 
 

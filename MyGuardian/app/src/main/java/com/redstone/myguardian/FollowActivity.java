@@ -41,6 +41,7 @@ public class FollowActivity extends AppCompatActivity implements OnMapReadyCallb
     private int USER_ID;
     private int PHONE_NR;
     private String USERNAME;
+    private String FOLLOWED_USER;
     Button btnRefresh;
     Button btnTrackView;
     Button btnChooseUser;
@@ -76,7 +77,9 @@ public class FollowActivity extends AppCompatActivity implements OnMapReadyCallb
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        Toast.makeText(getApplicationContext(),"Choosed: "+ item.getTitle() ,Toast.LENGTH_LONG).show();
+                        FOLLOWED_USER=item.getTitle().toString();
+                        Toast.makeText(getApplicationContext(),"Choosed: "+ FOLLOWED_USER ,Toast.LENGTH_LONG).show();
+                        locationTimerTask();
                         return true;
                     }
                 });
@@ -127,7 +130,7 @@ public class FollowActivity extends AppCompatActivity implements OnMapReadyCallb
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                               Toast.makeText(getApplicationContext(),"Connection error" ,Toast.LENGTH_LONG).show();
+                               Toast.makeText(getApplicationContext(),"Connection error from btnrefresh" ,Toast.LENGTH_LONG).show();
                                 error.printStackTrace();
                                 requestQueue.stop();
                             }
@@ -137,7 +140,7 @@ public class FollowActivity extends AppCompatActivity implements OnMapReadyCallb
                     @Override
                     protected Map<String, String> getParams() throws AuthFailureError {
                         Map<String,String> params = new HashMap<>();
-                        params.put("userid", Integer.toString(USER_ID));
+                        params.put("username", FOLLOWED_USER);
                         return params;
                     }
                 };
@@ -145,7 +148,7 @@ public class FollowActivity extends AppCompatActivity implements OnMapReadyCallb
 
             }
         });
-        locationTimerTask();
+       // locationTimerTask();
     }
 
     public void locationTimerTask() {
@@ -178,7 +181,7 @@ public class FollowActivity extends AppCompatActivity implements OnMapReadyCallb
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                Toast.makeText(getApplicationContext(),"Connection error" ,Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(),"Connection error from timertask" ,Toast.LENGTH_LONG).show();
                                 error.printStackTrace();
                                 requestQueue.stop();
                             }
@@ -188,7 +191,7 @@ public class FollowActivity extends AppCompatActivity implements OnMapReadyCallb
                     @Override
                     protected Map<String, String> getParams() throws AuthFailureError {
                         Map<String,String> params = new HashMap<>();
-                        params.put("userid", Integer.toString(USER_ID));
+                        params.put("username", FOLLOWED_USER);
                         return params;
                     }
                 };
@@ -209,11 +212,13 @@ public class FollowActivity extends AppCompatActivity implements OnMapReadyCallb
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             JSONArray usernameArray = jsonObject.getJSONArray("usernames");
+                            FOLLOWED_USER = usernameArray.getString(0);
                             for(int i=0;i<usernameArray.length();i+=1)
                             {
                                 String followUsername = usernameArray.getString(i);
                                 popupMenu.getMenu().add((followUsername));
                             }
+                            locationTimerTask();
                             requestQueue.stop();
                         }catch(JSONException exc)
                         {
@@ -258,7 +263,7 @@ public class FollowActivity extends AppCompatActivity implements OnMapReadyCallb
         super.onResume();
         Toast.makeText(getApplicationContext(),"Tracking enabled" ,Toast.LENGTH_SHORT).show();
         PAUSE_CTRL=false;
-        locationTimerTask();
+       // locationTimerTask();
     }
 }
 
