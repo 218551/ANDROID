@@ -8,4 +8,6 @@ public class DbConstants {
     public static final String URL_REGISTER = ROOT_URL + "dbRegisterUser.php";
     public static final String URL_LOADFOLLOWUSERS = ROOT_URL + "dbFindFriendships.php";
     public static final String URL_ADDFRIEND = ROOT_URL + "dbSetFriendship.php";
+    public static final String URL_DELFRIEND = ROOT_URL + "dbDelFriendship.php";
+    public static final String URL_GETNUMBERS = ROOT_URL + "dbGetNumbers.php";
 }

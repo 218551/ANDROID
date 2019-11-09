@@ -30,7 +30,6 @@ import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
     private int USER_ID;
-    private int PHONE_NR;
     private String USERNAME;
 
     Button btnLogin;
@@ -65,21 +64,17 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void onResponse(String response) {
                                 try {
-                                    mProgress.dismiss();
                                     JSONObject jsonObject = new JSONObject(response);
                                     Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
                                     USER_ID = jsonObject.getInt("userid");
                                     USERNAME = jsonObject.getString("username");
-                                    PHONE_NR = jsonObject.getInt("phonenr");
 
                                     if(USER_ID!=0){
                                         Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
-                                        myIntent.putExtra("USER_ID",USER_ID);
-                                        myIntent.putExtra("PHONE_NR",PHONE_NR);
                                         myIntent.putExtra("USERNAME",USERNAME);
+                                        myIntent.putExtra("USER_ID",USER_ID);
                                         startActivity(myIntent);
                                     }
-
                                     requestQueue.stop();
                                 }catch(JSONException exc)
                                 {
@@ -92,8 +87,8 @@ public class LoginActivity extends AppCompatActivity {
                             public void onErrorResponse(VolleyError error) {
                                 Toast.makeText(getApplicationContext(),"Connection failure" ,Toast.LENGTH_LONG).show();
                                 error.printStackTrace();
-                                mProgress.dismiss();
                                 requestQueue.stop();
+                                mProgress.dismiss();
                             }
                         }
 
@@ -107,8 +102,6 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 };
                 requestQueue.add(stringRequest);
-
-
             }
         });
 

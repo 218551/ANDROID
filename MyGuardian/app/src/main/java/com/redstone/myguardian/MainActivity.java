@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.view.View;
+import android.webkit.ConsoleMessage;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -41,17 +42,17 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Console;
 import java.util.HashMap;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
-    private int USER_ID;
-    private int PHONE_NR;
     private String USERNAME;
-
+    private Integer USER_ID;
     LocationManager locationManager;
     Button btnTrackView;
     Button btnSmsSend;
@@ -69,7 +70,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         USER_ID= this.getIntent().getExtras().getInt("USER_ID");
-        PHONE_NR = this.getIntent().getExtras().getInt("PHONE_NR");
         USERNAME = this.getIntent().getExtras().getString("USERNAME");
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
@@ -120,8 +120,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onProviderDisabled(String s) {
 
-               // Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                //startActivity(i);
             }
         };
 
@@ -130,8 +128,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View view) {
                 Intent myIntent = new Intent(getApplicationContext(), FollowActivity.class);
-                myIntent.putExtra("USER_ID",USER_ID);
-                myIntent.putExtra("PHONE_NR",PHONE_NR);
                 myIntent.putExtra("USERNAME",USERNAME);
                 startActivity(myIntent);
 
@@ -146,13 +142,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                     if(ContextCompat.checkSelfPermission(MainActivity.this,
                             Manifest.permission.READ_PHONE_STATE)==PackageManager.PERMISSION_GRANTED) {
-                        try {
-                            SmsManager.getDefault().sendTextMessage(Integer.toString(PHONE_NR), null, "JESTEM W NIEBEZPIECZENSTWIE!", null, null);
-                            Toast.makeText(getApplicationContext(), "Message Sent", Toast.LENGTH_LONG).show();
-                        } catch (Exception ex) {
-                            Toast.makeText(getApplicationContext(), ex.getMessage().toString(), Toast.LENGTH_LONG).show();
-                            ex.printStackTrace();
-                        }
+                        getNumbers();
                     }else {
                         requestReadPhoneStatePermission();
                     }
@@ -169,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View view) {
                 final EditText addEditText = new EditText(MainActivity.this);
                 AlertDialog dialog = new AlertDialog.Builder(MainActivity.this)
-                        .setTitle("Add new friend")
+                        .setTitle("Add/Delete friend")
                         .setMessage("Type friends username bellow")
                         .setView(addEditText)
                         .setPositiveButton("Add", new DialogInterface.OnClickListener() {
@@ -178,7 +168,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 addNewFriend(addEditText.getText().toString());
                             }
                         })
-                        .setNegativeButton("Cancel", null)
+                        .setNegativeButton("DELETE", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                delFriend(addEditText.getText().toString());
+                            }
+                        })
+                        .setNeutralButton("Cancel", null)
                         .create();
                 dialog.show();
 
@@ -186,6 +182,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
 
         locationManager.requestLocationUpdates("gps", 5000, 0, listener);
+        getLocation();
     }
 
     @Override
@@ -316,48 +313,43 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
         if (requestCode == FINE_LOCATION_PERMISSION_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "FINE_LOCATION Permission GRANTED", Toast.LENGTH_LONG).show();
-            } else {
+            if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "FINE_LOCATION Permission DENIED", Toast.LENGTH_LONG).show();
             }
         }
         if (requestCode == COARSE_LOCATION_PERMISSION_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "COARSE_LOCATION Permission GRANTED", Toast.LENGTH_LONG).show();
-            } else {
+            if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "COARSE_LOCATION Permission DENIED", Toast.LENGTH_LONG).show();
             }
         }
         if (requestCode == SMS_PERMISSION_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "SEND_SMS Permission GRANTED", Toast.LENGTH_LONG).show();
-            } else {
+            if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "SEND_SMS Permission DENIED", Toast.LENGTH_LONG).show();
             }
         }
         if (requestCode == READ_PHONE_STATE_PERMISSION_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "READ_PHONE_STATE Permission GRANTED", Toast.LENGTH_LONG).show();
-            } else {
+            if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "READ_PHONE_STATE Permission DENIED", Toast.LENGTH_LONG).show();
             }
         }
     }
 
-    void updateLocation(Location xy) {
 
-       // final int user_ID = user_id;
-        final Double x = xy.getLongitude();
-        final Double y = xy.getLatitude();
+    public void getLocation() {
         final RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, DbConstants.URL_ADD,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, DbConstants.URL_GET,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-                            Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
+                            LatLng latLng = new LatLng(jsonObject.getDouble("geowidth"), jsonObject.getDouble("geolength") );
+                            mapGoogle.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                            mapGoogle.animateCamera(CameraUpdateFactory.zoomTo(14));
+                            if(newmarker==null)
+                                newmarker = mapGoogle.addMarker(new MarkerOptions().position(latLng).title(latLng.toString()).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
+                            newmarker.setPosition(latLng);
+                            newmarker.setTitle(latLng.toString());
                             requestQueue.stop();
                         }catch(JSONException exc)
                         {
@@ -368,7 +360,44 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(),"Connection error." ,Toast.LENGTH_SHORT).show();
+                        error.printStackTrace();
+                        requestQueue.stop();
+                    }
+                }
 
+        ){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> params = new HashMap<>();
+                params.put("username", USERNAME);
+                return params;
+            }
+        };
+        requestQueue.add(stringRequest);
+    }
+
+
+    void updateLocation(Location xy) {
+
+        final Double x = xy.getLongitude();
+        final Double y = xy.getLatitude();
+        final RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, DbConstants.URL_ADD,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            requestQueue.stop();
+                        }catch(Exception exc)
+                        {
+                            exc.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
                         error.printStackTrace();
                         requestQueue.stop();
                     }
@@ -396,7 +425,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     public void onResponse(String response) {
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-                            Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
                             requestQueue.stop();
                         }catch(JSONException exc)
                         {
@@ -424,6 +453,85 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         requestQueue.add(stringRequest);
 
 
+    }
+
+    void delFriend(final String username2) {
+        final RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, DbConstants.URL_DELFRIEND,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+                            requestQueue.stop();
+                        }catch(JSONException exc)
+                        {
+                            exc.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(),"Connection failure" ,Toast.LENGTH_SHORT).show();
+                        error.printStackTrace();
+                        requestQueue.stop();
+                    }
+                }
+        ){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> params = new HashMap<>();
+                params.put("username1", USERNAME);
+                params.put("username2", username2);
+                return params;
+            }
+        };
+        requestQueue.add(stringRequest);
+
+
+    }
+
+    void getNumbers() {
+        final RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, DbConstants.URL_GETNUMBERS,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            JSONArray numbersArray = jsonObject.getJSONArray("phoneNumbers");
+                            for(int i=0;i<numbersArray.length();i+=1)
+                            {
+                                String phoneNumber = numbersArray.getString(i);
+                                SmsManager.getDefault().sendTextMessage(phoneNumber, null, "JESTEM W NIEBEZPIECZENSTWIE!", null, null);
+                            }
+                            Toast.makeText(getApplicationContext(), "Alarm messages sent.", Toast.LENGTH_SHORT).show();
+                            requestQueue.stop();
+                        }catch(JSONException exc)
+                        {
+                            exc.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(),"Connection failure." ,Toast.LENGTH_LONG).show();
+                        error.printStackTrace();
+                        requestQueue.stop();
+                    }
+                }
+        ){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> params = new HashMap<>();
+                params.put("username", USERNAME);
+                return params;
+            }
+        };
+        requestQueue.add(stringRequest);
     }
 }
 

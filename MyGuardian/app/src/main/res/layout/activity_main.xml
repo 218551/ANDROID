@@ -69,7 +69,7 @@
             android:background="@color/colorPrimary"
             android:fontFamily="sans-serif"
             android:padding="8dp"
-            android:text="Add new friend"
+            android:text="Add/Delete friend"
             android:textColor="#FFFFFF"
             app:layout_constraintTop_toBottomOf="@+id/button11"
             tools:layout_editor_absoluteX="8dp" />

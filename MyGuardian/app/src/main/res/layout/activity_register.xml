@@ -18,7 +18,7 @@
         android:layout_marginTop="16dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:hint="login"
+        android:hint="Username"
         android:layout_margin="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -32,7 +32,7 @@
         android:ems="10"
         android:layout_margin="8dp"
         android:inputType="textPassword"
-        android:hint="password"
+        android:hint="Password"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editText3" />
 
@@ -45,7 +45,7 @@
         android:ems="10"
         android:layout_margin="8dp"
         android:inputType="textPersonName"
-        android:hint="your phone number"
+        android:hint="Phone number"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editText4" />
 
@@ -73,7 +73,7 @@
         android:layout_marginTop="16dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:hint="phone number to follow"
+        android:hint="Firstname"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editText5" />
 
@@ -101,7 +101,7 @@
         android:ems="10"
         android:layout_margin="8dp"
         android:inputType="textPersonName"
-        android:hint="phone number for sending sms"
+        android:hint="Lastname"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editText6" />
 

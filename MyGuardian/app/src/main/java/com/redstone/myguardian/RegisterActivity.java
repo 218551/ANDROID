@@ -30,8 +30,8 @@ public class RegisterActivity extends AppCompatActivity {
     EditText login;
     EditText password;
     EditText myPhoneNr;
-    EditText smePhoneNr;
-    EditText alarmPhoneNr;
+    EditText firstname;
+    EditText lastname;
     ProgressDialog mProgress;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +42,8 @@ public class RegisterActivity extends AppCompatActivity {
         login = (EditText) findViewById(R.id.editText3);
         password = (EditText) findViewById(R.id.editText4);
         myPhoneNr = (EditText) findViewById(R.id.editText5);
-        smePhoneNr = (EditText) findViewById(R.id.editText6);
-        alarmPhoneNr = (EditText) findViewById(R.id.editText7);
+        firstname = (EditText) findViewById(R.id.editText6);
+        lastname = (EditText) findViewById(R.id.editText7);
 
         mProgress = new ProgressDialog(RegisterActivity.this);
         mProgress.setTitle("Processing...");
@@ -61,7 +61,6 @@ public class RegisterActivity extends AppCompatActivity {
                             @Override
                             public void onResponse(String response) {
                                 try {
-                                    mProgress.dismiss();
                                     JSONObject jsonObject = new JSONObject(response);
                                     Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
                                     SUCCES = jsonObject.getBoolean("succes");
@@ -70,7 +69,6 @@ public class RegisterActivity extends AppCompatActivity {
                                         Intent myIntent = new Intent(getApplicationContext(), LoginActivity.class);
                                         startActivity(myIntent);
                                     }
-
                                     requestQueue.stop();
                                 }catch(JSONException exc)
                                 {
@@ -95,14 +93,12 @@ public class RegisterActivity extends AppCompatActivity {
                         params.put("username", login.getText().toString());
                         params.put("password", password.getText().toString());
                         params.put("nrtel", myPhoneNr.getText().toString());
-                        params.put("guardianof", smePhoneNr.getText().toString());
-                        params.put("guardedby", alarmPhoneNr.getText().toString());
+                        params.put("firstname", firstname.getText().toString());
+                        params.put("lastname", lastname.getText().toString());
                         return params;
                     }
                 };
                 requestQueue.add(stringRequest);
-
-
             }
         });
 

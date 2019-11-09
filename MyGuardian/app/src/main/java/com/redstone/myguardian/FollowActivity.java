@@ -39,7 +39,6 @@ import java.util.TimerTask;
 
 public class FollowActivity extends AppCompatActivity implements OnMapReadyCallback {
     private int USER_ID;
-    private int PHONE_NR;
     private String USERNAME;
     private String FOLLOWED_USER;
     Button btnRefresh;
@@ -56,7 +55,6 @@ public class FollowActivity extends AppCompatActivity implements OnMapReadyCallb
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_follow);
         USER_ID= this.getIntent().getExtras().getInt("USER_ID");
-        PHONE_NR = this.getIntent().getExtras().getInt("PHONE_NR");
         USERNAME = this.getIntent().getExtras().getString("USERNAME");
         final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -78,7 +76,6 @@ public class FollowActivity extends AppCompatActivity implements OnMapReadyCallb
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         FOLLOWED_USER=item.getTitle().toString();
-                        Toast.makeText(getApplicationContext(),"Choosed: "+ FOLLOWED_USER ,Toast.LENGTH_LONG).show();
                         locationTimerTask();
                         return true;
                     }
@@ -94,7 +91,6 @@ public class FollowActivity extends AppCompatActivity implements OnMapReadyCallb
             public void onClick(View view) {
                 Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
                 myIntent.putExtra("USER_ID",USER_ID);
-                myIntent.putExtra("PHONE_NR",PHONE_NR);
                 myIntent.putExtra("USERNAME",USERNAME);
                 startActivity(myIntent);
 
@@ -130,7 +126,7 @@ public class FollowActivity extends AppCompatActivity implements OnMapReadyCallb
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                               Toast.makeText(getApplicationContext(),"Connection error from btnrefresh" ,Toast.LENGTH_LONG).show();
+                               Toast.makeText(getApplicationContext(),"Connection error." ,Toast.LENGTH_SHORT).show();
                                 error.printStackTrace();
                                 requestQueue.stop();
                             }
@@ -148,7 +144,6 @@ public class FollowActivity extends AppCompatActivity implements OnMapReadyCallb
 
             }
         });
-       // locationTimerTask();
     }
 
     public void locationTimerTask() {
@@ -181,7 +176,7 @@ public class FollowActivity extends AppCompatActivity implements OnMapReadyCallb
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                Toast.makeText(getApplicationContext(),"Connection error from timertask" ,Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(),"Connection error." ,Toast.LENGTH_LONG).show();
                                 error.printStackTrace();
                                 requestQueue.stop();
                             }
@@ -229,7 +224,7 @@ public class FollowActivity extends AppCompatActivity implements OnMapReadyCallb
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(),"Connection error from loadFollowUsers" ,Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),"Connection error." ,Toast.LENGTH_LONG).show();
                         error.printStackTrace();
                         requestQueue.stop();
                     }
@@ -255,15 +250,12 @@ public class FollowActivity extends AppCompatActivity implements OnMapReadyCallb
     protected void onPause() {
         super.onPause();
         PAUSE_CTRL=true;
-        Toast.makeText(getApplicationContext(),"Tracking disabled" ,Toast.LENGTH_SHORT).show();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Toast.makeText(getApplicationContext(),"Tracking enabled" ,Toast.LENGTH_SHORT).show();
         PAUSE_CTRL=false;
-       // locationTimerTask();
     }
 }
 
