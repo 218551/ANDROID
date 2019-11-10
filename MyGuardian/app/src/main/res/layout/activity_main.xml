@@ -43,7 +43,7 @@
             android:padding="8dp"
             android:text="Switch to Track mode"
             android:textColor="#FFFFFF"
-            app:layout_constraintTop_toBottomOf="@+id/button12"
+            app:layout_constraintTop_toBottomOf="@+id/button13"
             tools:layout_editor_absoluteX="8dp" />
 
         <Button
@@ -52,11 +52,11 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:layout_marginTop="16dp"
-            android:background="@color/colorPrimary"
+            android:background="@color/colorAlert"
             android:fontFamily="sans-serif"
             android:padding="8dp"
             android:text="SEND ALARM SMS"
-            android:textColor="#FF0000"
+            android:textColor="#FFFFFF"
             app:layout_constraintTop_toTopOf="parent"
             tools:layout_editor_absoluteX="8dp" />
 
@@ -69,9 +69,9 @@
             android:background="@color/colorPrimary"
             android:fontFamily="sans-serif"
             android:padding="8dp"
-            android:text="Add/Delete friend"
+            android:text="Friends "
             android:textColor="#FFFFFF"
-            app:layout_constraintTop_toBottomOf="@+id/button11"
+            app:layout_constraintTop_toBottomOf="@+id/button12"
             tools:layout_editor_absoluteX="8dp" />
 
     </android.support.constraint.ConstraintLayout>

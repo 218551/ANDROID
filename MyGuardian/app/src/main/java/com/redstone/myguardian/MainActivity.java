@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     LocationManager locationManager;
     Button btnTrackView;
     Button btnSmsSend;
-    Button btnAddFriend;
+    Button btnFriends;
 
     private LocationListener listener;
     private int FINE_LOCATION_PERMISSION_CODE=1;
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         btnTrackView = (Button) findViewById(R.id.button11);
         btnSmsSend = (Button) findViewById(R.id.button12);
-        btnAddFriend = (Button) findViewById(R.id.button13);
+        btnFriends = (Button) findViewById(R.id.button13);
         final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
@@ -129,8 +129,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View view) {
                 Intent myIntent = new Intent(getApplicationContext(), FollowActivity.class);
                 myIntent.putExtra("USERNAME",USERNAME);
+                myIntent.putExtra("USER_ID", USER_ID);
                 startActivity(myIntent);
-
+                finish();
             }
         });
 
@@ -154,30 +155,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-        btnAddFriend.setOnClickListener(new Button.OnClickListener() {
+        btnFriends.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final EditText addEditText = new EditText(MainActivity.this);
-                AlertDialog dialog = new AlertDialog.Builder(MainActivity.this)
-                        .setTitle("Add/Delete friend")
-                        .setMessage("Type friends username bellow")
-                        .setView(addEditText)
-                        .setPositiveButton("Add", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                addNewFriend(addEditText.getText().toString());
-                            }
-                        })
-                        .setNegativeButton("DELETE", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                delFriend(addEditText.getText().toString());
-                            }
-                        })
-                        .setNeutralButton("Cancel", null)
-                        .create();
-                dialog.show();
-
+                Intent myIntent = new Intent(getApplicationContext(), FriendsActivity.class);
+                myIntent.putExtra("USERNAME",USERNAME);
+                myIntent.putExtra("USER_ID", USER_ID);
+                startActivity(myIntent);
+                finish();
             }
         });
 
@@ -414,82 +399,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         };
         requestQueue.add(stringRequest);
-
-    }
-
-    void addNewFriend(final String username2) {
-        final RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, DbConstants.URL_ADDFRIEND,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
-                            requestQueue.stop();
-                        }catch(JSONException exc)
-                        {
-                            exc.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(),"Connection failure" ,Toast.LENGTH_LONG).show();
-                        error.printStackTrace();
-                        requestQueue.stop();
-                    }
-                }
-        ){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String,String> params = new HashMap<>();
-                params.put("username1", USERNAME);
-                params.put("username2", username2);
-                return params;
-            }
-        };
-        requestQueue.add(stringRequest);
-
-
-    }
-
-    void delFriend(final String username2) {
-        final RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, DbConstants.URL_DELFRIEND,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
-                            requestQueue.stop();
-                        }catch(JSONException exc)
-                        {
-                            exc.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(),"Connection failure" ,Toast.LENGTH_SHORT).show();
-                        error.printStackTrace();
-                        requestQueue.stop();
-                    }
-                }
-        ){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String,String> params = new HashMap<>();
-                params.put("username1", USERNAME);
-                params.put("username2", username2);
-                return params;
-            }
-        };
-        requestQueue.add(stringRequest);
-
 
     }
 

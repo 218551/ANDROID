@@ -10,8 +10,16 @@
         android:padding="5dp"
         android:text="friend1"
         android:layout_gravity="center_vertical"
-        android:id="@+id/friend_name"/>
+        android:id="@+id/inviter_name"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="3dp"
+        android:layout_gravity="center_vertical"
+        android:text="Confirm"
+        android:background="#1EA362"
+        android:id="@+id/btnAccept"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -21,6 +29,6 @@
         android:layout_gravity="center_vertical"
         android:background="@color/colorAlert"
         android:text="Delete"
-        android:id="@+id/btnDelete"/>
+        android:id="@+id/btnDeny"/>
 
 </LinearLayout>

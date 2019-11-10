@@ -73,7 +73,9 @@ public class LoginActivity extends AppCompatActivity {
                                         Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
                                         myIntent.putExtra("USERNAME",USERNAME);
                                         myIntent.putExtra("USER_ID",USER_ID);
+                                        myIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                         startActivity(myIntent);
+                                        finish();
                                     }
                                     requestQueue.stop();
                                 }catch(JSONException exc)
@@ -109,7 +111,9 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent myIntent = new Intent(getApplicationContext(), RegisterActivity.class);
+                myIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(myIntent);
+                finish();
             }
         });
     }

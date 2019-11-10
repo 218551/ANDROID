@@ -38,53 +38,29 @@ import java.util.List;
 import java.util.Map;
 
 
-public class FriendsActivity extends AppCompatActivity {
-    private Button btnAddFriend;
-    private Button btnInvitations;
+public class InvitationsActivity extends AppCompatActivity {
     private Button btnBack;
     private String USERNAME;
     private Integer USER_ID;
     private ListView lv;
 
-    private ArrayList<String> friendsData = new ArrayList<String>();
+    private ArrayList<String> invitationsData = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_friends);
+        setContentView(R.layout.activity_invitations);
         USERNAME = this.getIntent().getExtras().getString("USERNAME");
         USER_ID = this.getIntent().getExtras().getInt("USER_ID");
-        btnAddFriend = (Button) findViewById(R.id.btnAddFriend);
-        btnInvitations = (Button) findViewById(R.id.btnInvitations);
         btnBack = (Button) findViewById(R.id.btnBack);
-        lv = (ListView) findViewById(R.id.friends_list);
-        loadFollowUsers();
+        lv = (ListView) findViewById(R.id.invitations_list);
+        loadInvitations();
 
-        btnAddFriend.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final EditText addEditText = new EditText(FriendsActivity.this);
-                AlertDialog dialog = new AlertDialog.Builder(FriendsActivity.this)
-                        .setTitle("Add/Delete friend")
-                        .setMessage("Type friends username bellow")
-                        .setView(addEditText)
-                        .setPositiveButton("Add", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                addNewFriend(addEditText.getText().toString());
-                            }
-                        })
-                        .setNeutralButton("Cancel", null)
-                        .create();
-                dialog.show();
-
-            }
-        });
 
         btnBack.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
+                Intent myIntent = new Intent(getApplicationContext(), FriendsActivity.class);
                 myIntent.putExtra("USER_ID",USER_ID);
                 myIntent.putExtra("USERNAME",USERNAME);
                 startActivity(myIntent);
@@ -92,16 +68,6 @@ public class FriendsActivity extends AppCompatActivity {
             }
         });
 
-        btnInvitations.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent myIntent = new Intent(getApplicationContext(), InvitationsActivity.class);
-                myIntent.putExtra("USER_ID",USER_ID);
-                myIntent.putExtra("USERNAME",USERNAME);
-                startActivity(myIntent);
-                finish();
-            }
-        });
     }
 
     private class MyListAdaper extends ArrayAdapter<String> {
@@ -121,17 +87,27 @@ public class FriendsActivity extends AppCompatActivity {
                 LayoutInflater inflater = LayoutInflater.from(getContext());
                 convertView = inflater.inflate(layout, parent, false);
                 ViewHolder viewHolder = new ViewHolder();
-                viewHolder.title = (TextView) convertView.findViewById(R.id.friend_name);
-                viewHolder.btnDelete = (Button) convertView.findViewById(R.id.btnDelete);
+                viewHolder.title = (TextView) convertView.findViewById(R.id.inviter_name);
+                viewHolder.btnAccept = (Button) convertView.findViewById(R.id.btnAccept);
+                viewHolder.btnDeny = (Button) convertView.findViewById(R.id.btnDeny);
                 convertView.setTag(viewHolder);
             }
             mainViewholder = (ViewHolder) convertView.getTag();
 
-            mainViewholder.btnDelete.setOnClickListener(new View.OnClickListener() {
+            mainViewholder.btnDeny.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     delFriend(lv.getItemAtPosition(position).toString());
-                    friendsData.remove(position);
+                    invitationsData.remove(position);
+                    MyListAdaper.this.notifyDataSetChanged();
+                }
+            });
+
+            mainViewholder.btnAccept.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    confirmFriendship(lv.getItemAtPosition(position).toString());
+                    invitationsData.remove(position);
                     MyListAdaper.this.notifyDataSetChanged();
                 }
             });
@@ -142,12 +118,13 @@ public class FriendsActivity extends AppCompatActivity {
 
     public class ViewHolder {
         TextView title;
-        Button btnDelete;
+        Button btnDeny;
+        Button btnAccept;
     }
 
-    void addNewFriend(final String username2) {
-        final RequestQueue requestQueue = Volley.newRequestQueue(FriendsActivity.this);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, DbConstants.URL_ADDFRIEND,
+    void confirmFriendship(final String username2) {
+        final RequestQueue requestQueue = Volley.newRequestQueue(InvitationsActivity.this);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, DbConstants.URL_CONFIRMFRIENDSHIP,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -182,7 +159,7 @@ public class FriendsActivity extends AppCompatActivity {
     }
 
     void delFriend(final String username2) {
-        final RequestQueue requestQueue = Volley.newRequestQueue(FriendsActivity.this);
+        final RequestQueue requestQueue = Volley.newRequestQueue(InvitationsActivity.this);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, DbConstants.URL_DELFRIEND,
                 new Response.Listener<String>() {
                     @Override
@@ -217,9 +194,9 @@ public class FriendsActivity extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    public void loadFollowUsers() {
-        final RequestQueue requestQueue = Volley.newRequestQueue(FriendsActivity.this);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, DbConstants.URL_LOADFOLLOWUSERS,
+    public void loadInvitations() {
+        final RequestQueue requestQueue = Volley.newRequestQueue(InvitationsActivity.this);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, DbConstants.URL_LOADINVITATIONS,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -229,10 +206,10 @@ public class FriendsActivity extends AppCompatActivity {
 
                             for(int i=0;i<usernameArray.length();i+=1)
                             {
-                                String followUsername = usernameArray.getString(i);
-                                friendsData.add((followUsername));
+                                String inviterUsername = usernameArray.getString(i);
+                                invitationsData.add((inviterUsername));
                             }
-                            lv.setAdapter(new MyListAdaper(FriendsActivity.this, R.layout.friends_list_element, friendsData));
+                            lv.setAdapter(new MyListAdaper(InvitationsActivity.this, R.layout.invitations_list_element, invitationsData));
                             requestQueue.stop();
                         }catch(JSONException exc)
                         {

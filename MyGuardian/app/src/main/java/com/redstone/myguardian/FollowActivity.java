@@ -42,7 +42,7 @@ public class FollowActivity extends AppCompatActivity implements OnMapReadyCallb
     private String USERNAME;
     private String FOLLOWED_USER;
     Button btnRefresh;
-    Button btnTrackView;
+    Button btnCtrlView;
     Button btnChooseUser;
     TextView followName;
     private GoogleMap mapGoogle;
@@ -59,7 +59,7 @@ public class FollowActivity extends AppCompatActivity implements OnMapReadyCallb
         final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        btnTrackView = (Button) findViewById(R.id.btnSwitchToCtrl);
+        btnCtrlView = (Button) findViewById(R.id.btnSwitchToCtrl);
         btnRefresh = (Button) findViewById(R.id.btnRefresh);
         btnChooseUser = (Button) findViewById(R.id.btnChooseUser);
         followName = (TextView) findViewById(R.id.followName);
@@ -86,13 +86,14 @@ public class FollowActivity extends AppCompatActivity implements OnMapReadyCallb
 
         });
 
-        btnTrackView.setOnClickListener(new Button.OnClickListener() {
+        btnCtrlView.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
                 myIntent.putExtra("USER_ID",USER_ID);
                 myIntent.putExtra("USERNAME",USERNAME);
                 startActivity(myIntent);
+                finish();
 
             }
         });

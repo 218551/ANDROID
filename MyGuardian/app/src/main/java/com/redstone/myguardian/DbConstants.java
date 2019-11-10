@@ -10,4 +10,6 @@ public class DbConstants {
     public static final String URL_ADDFRIEND = ROOT_URL + "dbSetFriendship.php";
     public static final String URL_DELFRIEND = ROOT_URL + "dbDelFriendship.php";
     public static final String URL_GETNUMBERS = ROOT_URL + "dbGetNumbers.php";
+    public static final String URL_LOADINVITATIONS = ROOT_URL + "dbLoadInvitations.php";
+    public static final String URL_CONFIRMFRIENDSHIP = ROOT_URL + "dbConfirmFriendship.php";
 }

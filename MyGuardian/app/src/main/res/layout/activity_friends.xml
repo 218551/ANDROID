@@ -1,19 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="match_parent"
     tools:context=".FriendsActivity">
 
+    <TextView
+
+        android:id="@+id/viewTitle"
+        android:layout_width="match_parent"
+        android:layout_height="63dp"
+        android:background="@color/colorPrimary"
+        android:fontFamily="sans-serif-black"
+        android:gravity="center"
+        android:text="Friends"
+        android:textColor="#FFFFFF"
+        android:textSize="20dp" />
+
     <ListView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/friends_list"
-        android:paddingBottom="100dp">
-
-
+        android:layout_height="321dp"
+        android:id="@+id/friends_list">
     </ListView>
 
+    <Button
+        android:id="@+id/btnAddFriend"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/colorPrimary"
+        android:fontFamily="sans-serif"
+        android:padding="8dp"
+        android:text="Add new friend"
+        android:textColor="#FFFFFF"
+       />
+
+    <Button
+        android:id="@+id/btnInvitations"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/colorPrimary"
+        android:fontFamily="sans-serif"
+        android:padding="8dp"
+        android:text="Invitations"
+        android:textColor="#FFFFFF"
+        />
+
+    <Button
+        android:id="@+id/btnBack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/colorPrimary"
+        android:fontFamily="sans-serif"
+        android:padding="8dp"
+        android:text="Back to Control Panel"
+        android:textColor="#FFFFFF"
+        />
 
 </LinearLayout>
