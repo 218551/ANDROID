@@ -42,6 +42,7 @@ public class InvitationsActivity extends AppCompatActivity {
     private Button btnBack;
     private String USERNAME;
     private Integer USER_ID;
+    private TextView title;
     private ListView lv;
 
     private ArrayList<String> invitationsData = new ArrayList<String>();
@@ -53,6 +54,7 @@ public class InvitationsActivity extends AppCompatActivity {
         USERNAME = this.getIntent().getExtras().getString("USERNAME");
         USER_ID = this.getIntent().getExtras().getInt("USER_ID");
         btnBack = (Button) findViewById(R.id.btnBack);
+        title = (TextView) findViewById(R.id.viewTitleInv);
         lv = (ListView) findViewById(R.id.invitations_list);
         loadInvitations();
 
@@ -213,6 +215,8 @@ public class InvitationsActivity extends AppCompatActivity {
                             requestQueue.stop();
                         }catch(JSONException exc)
                         {
+                            Toast.makeText(getApplicationContext(),"No new invitations found." ,Toast.LENGTH_LONG).show();
+                            title.setText("Invitations(empty)");
                             exc.printStackTrace();
                         }
                     }
@@ -234,5 +238,14 @@ public class InvitationsActivity extends AppCompatActivity {
             }
         };
         requestQueue.add(stringRequest);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent myIntent = new Intent(getApplicationContext(), FriendsActivity.class);
+        myIntent.putExtra("USER_ID",USER_ID);
+        myIntent.putExtra("USERNAME",USERNAME);
+        startActivity(myIntent);
+        finish();
     }
 }

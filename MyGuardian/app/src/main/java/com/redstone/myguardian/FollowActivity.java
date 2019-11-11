@@ -41,7 +41,6 @@ public class FollowActivity extends AppCompatActivity implements OnMapReadyCallb
     private int USER_ID;
     private String USERNAME;
     private String FOLLOWED_USER;
-    Button btnRefresh;
     Button btnCtrlView;
     Button btnChooseUser;
     TextView followName;
@@ -60,7 +59,6 @@ public class FollowActivity extends AppCompatActivity implements OnMapReadyCallb
         mapFragment.getMapAsync(this);
 
         btnCtrlView = (Button) findViewById(R.id.btnSwitchToCtrl);
-        btnRefresh = (Button) findViewById(R.id.btnRefresh);
         btnChooseUser = (Button) findViewById(R.id.btnChooseUser);
         followName = (TextView) findViewById(R.id.followName);
 
@@ -97,54 +95,6 @@ public class FollowActivity extends AppCompatActivity implements OnMapReadyCallb
 
             }
         });
-
-        btnRefresh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                final RequestQueue requestQueue = Volley.newRequestQueue(FollowActivity.this);
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, DbConstants.URL_GET,
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                try {
-                                    JSONObject jsonObject = new JSONObject(response);
-                                    LatLng latLng = new LatLng(jsonObject.getDouble("geowidth"), jsonObject.getDouble("geolength") );
-                                    mapGoogle.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                                    mapGoogle.animateCamera(CameraUpdateFactory.zoomTo(14));
-                                    followName.setText(jsonObject.getString("firstname")+" "+jsonObject.getString("lastname"));
-                                    if(newmarker==null)
-                                        newmarker = mapGoogle.addMarker(new MarkerOptions().position(latLng).title("Tracked person").icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
-                                    newmarker.setPosition(latLng);
-
-                                    requestQueue.stop();
-                                }catch(JSONException exc)
-                                {
-                                    exc.printStackTrace();
-                                }
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                               Toast.makeText(getApplicationContext(),"Connection error." ,Toast.LENGTH_SHORT).show();
-                                error.printStackTrace();
-                                requestQueue.stop();
-                            }
-                        }
-
-                ){
-                    @Override
-                    protected Map<String, String> getParams() throws AuthFailureError {
-                        Map<String,String> params = new HashMap<>();
-                        params.put("username", FOLLOWED_USER);
-                        return params;
-                    }
-                };
-                requestQueue.add(stringRequest);
-
-            }
-        });
     }
 
     public void locationTimerTask() {
@@ -165,7 +115,7 @@ public class FollowActivity extends AppCompatActivity implements OnMapReadyCallb
                                     if(newmarker==null)
                                         newmarker = mapGoogle.addMarker(new MarkerOptions().position(latLng).title(latLng.toString()).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
                                     newmarker.setPosition(latLng);
-                                    newmarker.setTitle(latLng.toString());
+                                    newmarker.setTitle(jsonObject.getString("date"));
 
                                     requestQueue.stop();
                                 }catch(JSONException exc)
@@ -257,6 +207,15 @@ public class FollowActivity extends AppCompatActivity implements OnMapReadyCallb
     protected void onResume() {
         super.onResume();
         PAUSE_CTRL=false;
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
+        myIntent.putExtra("USER_ID",USER_ID);
+        myIntent.putExtra("USERNAME",USERNAME);
+        startActivity(myIntent);
+        finish();
     }
 }
 

@@ -20,6 +20,7 @@
         android:layout_margin="3dp"
         android:layout_gravity="center_vertical"
         android:background="@color/colorAlert"
+        android:drawableLeft="@android:drawable/ic_delete"
         android:text="Delete"
         android:id="@+id/btnDelete"/>
 

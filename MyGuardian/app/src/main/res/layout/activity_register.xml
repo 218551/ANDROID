@@ -59,7 +59,9 @@
         android:background="@color/colorPrimary"
         android:textColor="#FFFFFF"
         android:fontFamily="sans-serif"
-        android:padding="8dp"
+        android:paddingRight="125dp"
+        android:paddingLeft="125dp"
+        android:drawableLeft="@android:drawable/ic_menu_myplaces"
         android:layout_margin="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editText7" />
@@ -88,7 +90,9 @@
         android:background="@color/colorPrimary"
         android:textColor="#FFFFFF"
         android:fontFamily="sans-serif"
-        android:padding="8dp"
+        android:paddingRight="130dp"
+        android:paddingLeft="130dp"
+        android:drawableLeft="@android:drawable/ic_menu_revert"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button3" />
 

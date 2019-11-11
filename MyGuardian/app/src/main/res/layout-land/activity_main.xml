@@ -5,30 +5,35 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <TextView
-        android:gravity="center"
         android:id="@+id/textView3"
         android:layout_width="match_parent"
         android:layout_height="63dp"
-        android:text="CONTROL PANEL"
         android:background="@color/colorPrimary"
-        android:textColor="#FFFFFF"
         android:fontFamily="sans-serif-black"
-        android:textSize="20dp" />
+        android:gravity="center"
+        android:text="CONTROL PANEL"
+        android:textColor="#FFFFFF"
+        android:textSize="20dp"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="326dp" />
+        android:layout_width="wrap_content"
+        android:layout_height="326dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout2"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -39,10 +44,10 @@
             android:layout_margin="8dp"
             android:layout_marginTop="16dp"
             android:background="@color/colorPrimary"
-            android:fontFamily="sans-serif"
-            android:paddingRight="70dp"
-            android:paddingLeft="70dp"
             android:drawableLeft="@android:drawable/ic_menu_mylocation"
+            android:fontFamily="sans-serif"
+            android:paddingLeft="70dp"
+            android:paddingRight="70dp"
             android:text="Switch to Track mode"
             android:textColor="#FFFFFF"
             app:layout_constraintTop_toBottomOf="@+id/button13"
@@ -55,10 +60,10 @@
             android:layout_margin="8dp"
             android:layout_marginTop="16dp"
             android:background="@color/colorAlert"
-            android:fontFamily="sans-serif"
-            android:paddingRight="90dp"
-            android:paddingLeft="90dp"
             android:drawableLeft="@android:drawable/ic_dialog_email"
+            android:fontFamily="sans-serif"
+            android:paddingLeft="90dp"
+            android:paddingRight="90dp"
             android:text="SEND ALARM SMS"
             android:textColor="#FFFFFF"
             app:layout_constraintTop_toTopOf="parent"
@@ -71,10 +76,10 @@
             android:layout_margin="8dp"
             android:layout_marginTop="16dp"
             android:background="@color/colorPrimary"
-            android:fontFamily="sans-serif"
-            android:paddingRight="120dp"
-            android:paddingLeft="120dp"
             android:drawableLeft="@android:drawable/ic_menu_sort_by_size"
+            android:fontFamily="sans-serif"
+            android:paddingLeft="120dp"
+            android:paddingRight="120dp"
             android:text="Friends"
             android:textColor="#FFFFFF"
             app:layout_constraintTop_toBottomOf="@+id/button12"
@@ -84,11 +89,11 @@
             android:id="@+id/txt1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:text="Logged in as"
             android:textSize="18dp"
-            android:layout_margin="8dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/button11" />
 
@@ -96,14 +101,14 @@
             android:id="@+id/loggedName"
             android:layout_width="204dp"
             android:layout_height="wrap_content"
+            android:layout_margin="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:text=""
             android:textSize="18dp"
-            android:layout_margin="8dp"
             app:layout_constraintStart_toEndOf="@+id/txt1"
             app:layout_constraintTop_toBottomOf="@id/button11" />
     </android.support.constraint.ConstraintLayout>
 
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>
 </ScrollView>

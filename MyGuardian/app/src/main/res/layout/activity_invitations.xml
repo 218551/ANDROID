@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,7 +14,7 @@
     tools:context=".InvitationsActivity">
 
         <TextView
-        android:id="@+id/viewTitle"
+        android:id="@+id/viewTitleInv"
         android:layout_width="match_parent"
         android:layout_height="63dp"
         android:background="@color/colorPrimary"
@@ -20,7 +26,7 @@
 
         <ListView
         android:layout_width="match_parent"
-        android:layout_height="450dp"
+        android:layout_height="468dp"
         android:id="@+id/invitations_list">
          </ListView>
 
@@ -32,9 +38,11 @@
         android:layout_marginTop="16dp"
         android:background="@color/colorPrimary"
         android:fontFamily="sans-serif"
-        android:padding="8dp"
+        android:paddingRight="90dp"
+        android:paddingLeft="90dp"
+        android:drawableLeft="@android:drawable/ic_menu_sort_by_size"
         android:text="Back to Friends"
         android:textColor="#FFFFFF"
         />
-
 </LinearLayout>
+</ScrollView>

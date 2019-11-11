@@ -26,7 +26,7 @@
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="321dp" />
+        android:layout_height="385dp" />
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -38,7 +38,10 @@
             android:layout_height="match_parent"
             android:layout_marginTop="8dp"
             android:background="@color/colorPrimary"
-            android:text="Choose user to follow..."
+            android:paddingRight="50dp"
+            android:paddingLeft="50dp"
+            android:drawableLeft="@android:drawable/ic_menu_view"
+            android:text="Choose friend to follow..."
             android:textColor="#FFFFFF"
             android:fontFamily="sans-serif"
             android:layout_margin="8dp"
@@ -52,26 +55,14 @@
             android:layout_marginTop="8dp"
             android:background="@color/colorPrimary"
             android:fontFamily="sans-serif"
-            android:padding="8dp"
             android:layout_margin="8dp"
-            android:text="Switch to Control Panel"
-            android:textColor="#FFFFFF"
-            app:layout_constraintTop_toBottomOf="@+id/btnRefresh"
-            tools:layout_editor_absoluteX="0dp" />
-
-        <Button
-            android:id="@+id/btnRefresh"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@color/colorPrimary"
-            android:fontFamily="sans-serif"
-            android:padding="8dp"
-            android:layout_margin="8dp"
-            android:text="Refresh"
+            android:paddingRight="60dp"
+            android:paddingLeft="60dp"
+            android:drawableLeft="@android:drawable/ic_dialog_map"
+            android:text="Back to Control Panel"
             android:textColor="#FFFFFF"
             app:layout_constraintTop_toBottomOf="@+id/btnChooseUser"
-            tools:layout_editor_absoluteX="28dp" />
+            tools:layout_editor_absoluteX="0dp" />
 
         <TextView
             android:id="@+id/txt1"
@@ -91,7 +82,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
-            android:text="unknown name"
+            android:text=""
             android:textSize="18dp"
             android:layout_margin="8dp"
             app:layout_constraintStart_toEndOf="@+id/txt1"

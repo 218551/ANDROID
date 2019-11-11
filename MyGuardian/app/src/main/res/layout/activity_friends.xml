@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -22,7 +27,7 @@
 
     <ListView
         android:layout_width="match_parent"
-        android:layout_height="321dp"
+        android:layout_height="340dp"
         android:id="@+id/friends_list">
     </ListView>
 
@@ -34,7 +39,9 @@
         android:layout_marginTop="16dp"
         android:background="@color/colorPrimary"
         android:fontFamily="sans-serif"
-        android:padding="8dp"
+        android:paddingRight="100dp"
+        android:paddingLeft="100dp"
+        android:drawableLeft="@android:drawable/ic_menu_add"
         android:text="Add new friend"
         android:textColor="#FFFFFF"
        />
@@ -47,7 +54,9 @@
         android:layout_marginTop="16dp"
         android:background="@color/colorPrimary"
         android:fontFamily="sans-serif"
-        android:padding="8dp"
+        android:paddingRight="110dp"
+        android:paddingLeft="110dp"
+        android:drawableLeft="@android:drawable/ic_menu_agenda"
         android:text="Invitations"
         android:textColor="#FFFFFF"
         />
@@ -60,9 +69,12 @@
         android:layout_marginTop="16dp"
         android:background="@color/colorPrimary"
         android:fontFamily="sans-serif"
-        android:padding="8dp"
+        android:paddingRight="60dp"
+        android:paddingLeft="60dp"
+        android:drawableLeft="@android:drawable/ic_dialog_map"
         android:text="Back to Control Panel"
         android:textColor="#FFFFFF"
         />
 
 </LinearLayout>
+</ScrollView>

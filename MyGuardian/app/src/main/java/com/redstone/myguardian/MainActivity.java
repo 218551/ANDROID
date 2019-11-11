@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     Button btnTrackView;
     Button btnSmsSend;
     Button btnFriends;
+    TextView loggedName;
 
     private LocationListener listener;
     private int FINE_LOCATION_PERMISSION_CODE=1;
@@ -76,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         btnTrackView = (Button) findViewById(R.id.button11);
         btnSmsSend = (Button) findViewById(R.id.button12);
         btnFriends = (Button) findViewById(R.id.button13);
+        loggedName = (TextView) findViewById(R.id.loggedName);
         final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
@@ -90,10 +92,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     requestCoarseLocationPermission();
         }
 
-
-
-
-
         listener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
@@ -103,8 +101,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if(newmarker==null)
                 newmarker = mapGoogle.addMarker(new MarkerOptions().position(latLng).title(location.getLongitude() + " " + location.getLatitude()).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
                 newmarker.setPosition(latLng);
-                newmarker.setTitle(location.getLongitude() + " " + location.getLatitude());
+                //newmarker.setTitle(location.getLongitude() + " " + location.getLatitude());
                 updateLocation(location);
+                getLocation();
             }
 
             @Override
@@ -329,12 +328,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             LatLng latLng = new LatLng(jsonObject.getDouble("geowidth"), jsonObject.getDouble("geolength") );
+                            loggedName.setText(jsonObject.getString("firstname")+" "+jsonObject.getString("lastname"));
                             mapGoogle.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                             mapGoogle.animateCamera(CameraUpdateFactory.zoomTo(14));
+
                             if(newmarker==null)
                                 newmarker = mapGoogle.addMarker(new MarkerOptions().position(latLng).title(latLng.toString()).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
                             newmarker.setPosition(latLng);
-                            newmarker.setTitle(latLng.toString());
+                            newmarker.setTitle(jsonObject.getString("date"));
                             requestQueue.stop();
                         }catch(JSONException exc)
                         {
@@ -373,6 +374,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     @Override
                     public void onResponse(String response) {
                         try {
+                            if(loggedName.getText()==""){
+                                getLocation();
+                            }
+
                             requestQueue.stop();
                         }catch(Exception exc)
                         {
@@ -394,7 +399,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Map<String,String> params = new HashMap<>();
                 params.put("geolength",x.toString());
                 params.put("geowidth",y.toString());
-                params.put("userid",Integer.toString(USER_ID));
+                params.put("username", USERNAME);
                 return params;
             }
         };
@@ -441,6 +446,25 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         };
         requestQueue.add(stringRequest);
+    }
+
+    @Override
+    public void onBackPressed() {
+        AlertDialog dialog = new AlertDialog.Builder(MainActivity.this)
+                .setTitle("Are you sure?")
+                .setMessage("Do you want to logout?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent myIntent = new Intent(getApplicationContext(), LoginActivity.class);
+                        myIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(myIntent);
+                        finish();
+                    }
+                })
+                .setNeutralButton("Cancel", null)
+                .create();
+        dialog.show();
     }
 }
 

@@ -42,6 +42,7 @@ public class FriendsActivity extends AppCompatActivity {
     private Button btnAddFriend;
     private Button btnInvitations;
     private Button btnBack;
+    private TextView title;
     private String USERNAME;
     private Integer USER_ID;
     private ListView lv;
@@ -52,6 +53,7 @@ public class FriendsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends);
+        title = (TextView) findViewById(R.id.viewTitle);
         USERNAME = this.getIntent().getExtras().getString("USERNAME");
         USER_ID = this.getIntent().getExtras().getInt("USER_ID");
         btnAddFriend = (Button) findViewById(R.id.btnAddFriend);
@@ -236,6 +238,8 @@ public class FriendsActivity extends AppCompatActivity {
                             requestQueue.stop();
                         }catch(JSONException exc)
                         {
+                            Toast.makeText(getApplicationContext(),"No friends found." ,Toast.LENGTH_LONG).show();
+                            title.setText("Friends(empty)");
                             exc.printStackTrace();
                         }
                     }
@@ -257,5 +261,14 @@ public class FriendsActivity extends AppCompatActivity {
             }
         };
         requestQueue.add(stringRequest);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
+        myIntent.putExtra("USER_ID",USER_ID);
+        myIntent.putExtra("USERNAME",USERNAME);
+        startActivity(myIntent);
+        finish();
     }
 }

@@ -20,11 +20,13 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
-    Boolean SUCCES;
+    Integer SUCCES;
     Button btnBack;
     Button btnRegister;
     EditText login;
@@ -61,11 +63,11 @@ public class RegisterActivity extends AppCompatActivity {
                             @Override
                             public void onResponse(String response) {
                                 try {
+                                    mProgress.dismiss();
                                     JSONObject jsonObject = new JSONObject(response);
                                     Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
-                                    SUCCES = jsonObject.getBoolean("succes");
-
-                                    if(SUCCES){
+                                    SUCCES = Integer.parseInt(jsonObject.getString("succes"));
+                                    if(SUCCES==1){
                                         Intent myIntent = new Intent(getApplicationContext(), LoginActivity.class);
                                         startActivity(myIntent);
                                     }
@@ -81,8 +83,9 @@ public class RegisterActivity extends AppCompatActivity {
                             public void onErrorResponse(VolleyError error) {
                                 Toast.makeText(getApplicationContext(),"Connection failure" ,Toast.LENGTH_LONG).show();
                                 error.printStackTrace();
-                                requestQueue.stop();
                                 mProgress.dismiss();
+                                requestQueue.stop();
+
                             }
                         }
 
@@ -91,7 +94,7 @@ public class RegisterActivity extends AppCompatActivity {
                     protected Map<String, String> getParams() throws AuthFailureError {
                         Map<String,String> params = new HashMap<>();
                         params.put("username", login.getText().toString());
-                        params.put("password", password.getText().toString());
+                        params.put("password", md5(password.getText().toString()));
                         params.put("nrtel", myPhoneNr.getText().toString());
                         params.put("firstname", firstname.getText().toString());
                         params.put("lastname", lastname.getText().toString());
@@ -113,4 +116,23 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
     }
+    public String md5(String s) {
+        try {
+            // Create MD5 Hash
+            MessageDigest digest = java.security.MessageDigest.getInstance("MD5");
+            digest.update(s.getBytes());
+            byte messageDigest[] = digest.digest();
+
+            // Create Hex String
+            StringBuffer hexString = new StringBuffer();
+            for (int i=0; i<messageDigest.length; i++)
+                hexString.append(Integer.toHexString(0xFF & messageDigest[i]));
+            return hexString.toString();
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
 }
