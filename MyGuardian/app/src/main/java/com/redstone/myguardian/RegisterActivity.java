@@ -81,7 +81,7 @@ public class RegisterActivity extends AppCompatActivity {
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                Toast.makeText(getApplicationContext(),"Connection failure" ,Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(),"Unable to register user. Check internet connection." ,Toast.LENGTH_LONG).show();
                                 error.printStackTrace();
                                 mProgress.dismiss();
                                 requestQueue.stop();

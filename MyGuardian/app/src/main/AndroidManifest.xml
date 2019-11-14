@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.redstone.myguardian">
+
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -37,8 +38,13 @@
         android:roundIcon="@mipmap/ic_guardian"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".InvitationsActivity"></activity>
-        <activity android:name=".FriendsActivity"></activity>
+        <service
+            android:name=".UpdateLocationService"
+            android:enabled="true"
+            android:exported="true"></service>
+
+        <activity android:name=".InvitationsActivity" />
+        <activity android:name=".FriendsActivity" />
         <activity android:name=".FollowActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".LoginActivity">

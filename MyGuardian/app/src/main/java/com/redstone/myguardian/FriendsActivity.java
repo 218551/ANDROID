@@ -67,7 +67,7 @@ public class FriendsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 final EditText addEditText = new EditText(FriendsActivity.this);
                 AlertDialog dialog = new AlertDialog.Builder(FriendsActivity.this)
-                        .setTitle("Add/Delete friend")
+                        .setTitle("Add friend")
                         .setMessage("Type friends username bellow")
                         .setView(addEditText)
                         .setPositiveButton("Add", new DialogInterface.OnClickListener() {
@@ -155,7 +155,6 @@ public class FriendsActivity extends AppCompatActivity {
                     public void onResponse(String response) {
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-                            Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
                             requestQueue.stop();
                         }catch(JSONException exc)
                         {
@@ -166,7 +165,7 @@ public class FriendsActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(),"Connection failure" ,Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),"Unable to add new friend. Check internet connection." ,Toast.LENGTH_LONG).show();
                         error.printStackTrace();
                         requestQueue.stop();
                     }
@@ -191,7 +190,6 @@ public class FriendsActivity extends AppCompatActivity {
                     public void onResponse(String response) {
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-                            Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
                             requestQueue.stop();
                         }catch(JSONException exc)
                         {
@@ -202,7 +200,7 @@ public class FriendsActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(),"Connection failure" ,Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"Unable to delete the friend. Check internet connection" ,Toast.LENGTH_SHORT).show();
                         error.printStackTrace();
                         requestQueue.stop();
                     }
@@ -238,7 +236,6 @@ public class FriendsActivity extends AppCompatActivity {
                             requestQueue.stop();
                         }catch(JSONException exc)
                         {
-                            Toast.makeText(getApplicationContext(),"No friends found." ,Toast.LENGTH_LONG).show();
                             title.setText("Friends(empty)");
                             exc.printStackTrace();
                         }
@@ -247,7 +244,7 @@ public class FriendsActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(),"Connection error." ,Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),"Unable to load friends list. Check internet connection." ,Toast.LENGTH_LONG).show();
                         error.printStackTrace();
                         requestQueue.stop();
                     }

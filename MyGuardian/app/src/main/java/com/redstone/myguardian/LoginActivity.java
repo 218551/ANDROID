@@ -69,7 +69,6 @@ public class LoginActivity extends AppCompatActivity {
                                 try {
                                     mProgress.dismiss();
                                     JSONObject jsonObject = new JSONObject(response);
-                                    Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
                                     USER_ID = jsonObject.getInt("userid");
                                     USERNAME = jsonObject.getString("username");
                                     if(USER_ID!=0){
@@ -90,7 +89,7 @@ public class LoginActivity extends AppCompatActivity {
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                Toast.makeText(getApplicationContext(),"Connection failure" ,Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(),"Unable to login. Check internet connection." ,Toast.LENGTH_LONG).show();
                                 error.printStackTrace();
                                 requestQueue.stop();
                                 mProgress.dismiss();

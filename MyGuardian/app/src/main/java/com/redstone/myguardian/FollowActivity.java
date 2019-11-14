@@ -127,7 +127,7 @@ public class FollowActivity extends AppCompatActivity implements OnMapReadyCallb
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                Toast.makeText(getApplicationContext(),"Connection error." ,Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(),"Unable to get location. Check internet connection." ,Toast.LENGTH_LONG).show();
                                 error.printStackTrace();
                                 requestQueue.stop();
                             }
@@ -175,7 +175,7 @@ public class FollowActivity extends AppCompatActivity implements OnMapReadyCallb
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(),"Connection error." ,Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),"Unable to load friends list. Check internet connection." ,Toast.LENGTH_LONG).show();
                         error.printStackTrace();
                         requestQueue.stop();
                     }

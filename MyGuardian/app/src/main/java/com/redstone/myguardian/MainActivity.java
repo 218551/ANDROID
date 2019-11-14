@@ -99,9 +99,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 mapGoogle.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                 mapGoogle.animateCamera(CameraUpdateFactory.zoomTo(14));
                 if(newmarker==null)
-                newmarker = mapGoogle.addMarker(new MarkerOptions().position(latLng).title(location.getLongitude() + " " + location.getLatitude()).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
+                newmarker = mapGoogle.addMarker(new MarkerOptions().position(latLng).title("My position").icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
                 newmarker.setPosition(latLng);
-                //newmarker.setTitle(location.getLongitude() + " " + location.getLatitude());
                 updateLocation(location);
                 getLocation();
             }
@@ -121,6 +120,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             }
         };
+
+        Intent startServiceIntent = new Intent(MainActivity.this, UpdateLocationService.class);
+        startService(startServiceIntent);
 
 
         btnTrackView.setOnClickListener(new Button.OnClickListener() {
@@ -335,7 +337,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             if(newmarker==null)
                                 newmarker = mapGoogle.addMarker(new MarkerOptions().position(latLng).title(latLng.toString()).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
                             newmarker.setPosition(latLng);
-                            newmarker.setTitle(jsonObject.getString("date"));
+                            newmarker.setTitle(jsonObject.getString("data"));
                             requestQueue.stop();
                         }catch(JSONException exc)
                         {
@@ -346,7 +348,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(),"Connection error." ,Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"Unable to get location. Check internet connection." ,Toast.LENGTH_SHORT).show();
                         error.printStackTrace();
                         requestQueue.stop();
                     }
@@ -432,7 +434,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(),"Connection failure." ,Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),"Unable to send messages list. Check internet connection." ,Toast.LENGTH_LONG).show();
                         error.printStackTrace();
                         requestQueue.stop();
                     }

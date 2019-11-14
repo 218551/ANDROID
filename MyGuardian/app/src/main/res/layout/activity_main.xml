@@ -5,105 +5,105 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <TextView
-        android:gravity="center"
-        android:id="@+id/textView3"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="63dp"
-        android:text="CONTROL PANEL"
-        android:background="@color/colorPrimary"
-        android:textColor="#FFFFFF"
-        android:fontFamily="sans-serif-black"
-        android:textSize="20dp" />
-
-    <fragment
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="326dp" />
-
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <Button
-            android:id="@+id/button11"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:layout_marginTop="16dp"
-            android:background="@color/colorPrimary"
-            android:fontFamily="sans-serif"
-            android:paddingRight="70dp"
-            android:paddingLeft="70dp"
-            android:drawableLeft="@android:drawable/ic_menu_mylocation"
-            android:text="Switch to Track mode"
-            android:textColor="#FFFFFF"
-            app:layout_constraintTop_toBottomOf="@+id/button13"
-            tools:layout_editor_absoluteX="8dp" />
-
-        <Button
-            android:id="@+id/button12"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:layout_marginTop="16dp"
-            android:background="@color/colorAlert"
-            android:fontFamily="sans-serif"
-            android:paddingRight="90dp"
-            android:paddingLeft="90dp"
-            android:drawableLeft="@android:drawable/ic_dialog_email"
-            android:text="SEND ALARM SMS"
-            android:textColor="#FFFFFF"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:layout_editor_absoluteX="8dp" />
-
-        <Button
-            android:id="@+id/button13"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:layout_marginTop="16dp"
-            android:background="@color/colorPrimary"
-            android:fontFamily="sans-serif"
-            android:paddingRight="120dp"
-            android:paddingLeft="120dp"
-            android:drawableLeft="@android:drawable/ic_menu_sort_by_size"
-            android:text="Friends"
-            android:textColor="#FFFFFF"
-            app:layout_constraintTop_toBottomOf="@+id/button12"
-            tools:layout_editor_absoluteX="8dp" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/txt1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:text="Logged in as"
-            android:textSize="18dp"
-            android:layout_margin="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/button11" />
+            android:gravity="center"
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="63dp"
+            android:text="CONTROL PANEL"
+            android:background="@color/colorPrimary"
+            android:textColor="#FFFFFF"
+            android:fontFamily="sans-serif-black"
+            android:textSize="20dp" />
 
-        <TextView
-            android:id="@+id/loggedName"
-            android:layout_width="204dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:text=""
-            android:textSize="18dp"
-            android:layout_margin="8dp"
-            app:layout_constraintStart_toEndOf="@+id/txt1"
-            app:layout_constraintTop_toBottomOf="@id/button11" />
-    </android.support.constraint.ConstraintLayout>
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="326dp" />
 
-</LinearLayout>
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/button11"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/colorPrimary"
+                android:fontFamily="sans-serif"
+                android:paddingRight="70dp"
+                android:paddingLeft="70dp"
+                android:drawableLeft="@android:drawable/ic_menu_view"
+                android:text="Switch to Track mode"
+                android:textColor="#FFFFFF"
+                app:layout_constraintTop_toBottomOf="@+id/button13"
+                tools:layout_editor_absoluteX="8dp" />
+
+            <Button
+                android:id="@+id/button12"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/colorAlert"
+                android:fontFamily="sans-serif"
+                android:paddingRight="90dp"
+                android:paddingLeft="90dp"
+                android:drawableLeft="@android:drawable/ic_dialog_email"
+                android:text="SEND ALARM SMS"
+                android:textColor="#FFFFFF"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_editor_absoluteX="8dp" />
+
+            <Button
+                android:id="@+id/button13"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/colorPrimary"
+                android:fontFamily="sans-serif"
+                android:paddingRight="115dp"
+                android:paddingLeft="115dp"
+                android:drawableLeft="@android:drawable/ic_menu_sort_by_size"
+                android:text="Friends"
+                android:textColor="#FFFFFF"
+                app:layout_constraintTop_toBottomOf="@+id/button12"
+                tools:layout_editor_absoluteX="8dp" />
+
+            <TextView
+                android:id="@+id/txt1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:text="Logged in as"
+                android:textSize="18dp"
+                android:layout_margin="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/button11" />
+
+            <TextView
+                android:id="@+id/loggedName"
+                android:layout_width="204dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:text=""
+                android:textSize="18dp"
+                android:layout_margin="8dp"
+                app:layout_constraintStart_toEndOf="@+id/txt1"
+                app:layout_constraintTop_toBottomOf="@id/button11" />
+        </android.support.constraint.ConstraintLayout>
+
+    </LinearLayout>
 </ScrollView>
