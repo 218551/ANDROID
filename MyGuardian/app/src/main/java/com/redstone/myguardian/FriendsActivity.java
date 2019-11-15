@@ -155,6 +155,7 @@ public class FriendsActivity extends AppCompatActivity {
                     public void onResponse(String response) {
                         try {
                             JSONObject jsonObject = new JSONObject(response);
+                            Toast.makeText(getApplicationContext(),jsonObject.getString("message") ,Toast.LENGTH_LONG).show();
                             requestQueue.stop();
                         }catch(JSONException exc)
                         {
@@ -190,6 +191,7 @@ public class FriendsActivity extends AppCompatActivity {
                     public void onResponse(String response) {
                         try {
                             JSONObject jsonObject = new JSONObject(response);
+                            Toast.makeText(getApplicationContext(),jsonObject.getString("message") ,Toast.LENGTH_LONG).show();
                             requestQueue.stop();
                         }catch(JSONException exc)
                         {

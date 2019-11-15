@@ -2,11 +2,14 @@ package com.redstone.myguardian;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -34,7 +37,8 @@ public class RegisterActivity extends AppCompatActivity {
     EditText myPhoneNr;
     EditText firstname;
     EditText lastname;
-    ProgressDialog mProgress;
+    ProgressBar progressBar;
+    ConstraintLayout mainLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,24 +50,22 @@ public class RegisterActivity extends AppCompatActivity {
         myPhoneNr = (EditText) findViewById(R.id.editText5);
         firstname = (EditText) findViewById(R.id.editText6);
         lastname = (EditText) findViewById(R.id.editText7);
-
-        mProgress = new ProgressDialog(RegisterActivity.this);
-        mProgress.setTitle("Processing...");
-        mProgress.setMessage("Please wait...");
-        mProgress.setCancelable(false);
-        mProgress.setIndeterminate(true);
+        progressBar= (ProgressBar) findViewById(R.id.progressBar2);
+        mainLayout = (ConstraintLayout) findViewById(R.id.constraint2);
 
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mProgress.show();
+                InputMethodManager imm = (InputMethodManager)getSystemService(LoginActivity.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(mainLayout.getWindowToken(), 0);
+                progressBar.setVisibility(View.VISIBLE);
                 final RequestQueue requestQueue = Volley.newRequestQueue(RegisterActivity.this);
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, DbConstants.URL_REGISTER,
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
                                 try {
-                                    mProgress.dismiss();
+                                    progressBar.setVisibility(View.INVISIBLE);
                                     JSONObject jsonObject = new JSONObject(response);
                                     Toast.makeText(getApplicationContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
                                     SUCCES = Integer.parseInt(jsonObject.getString("succes"));
@@ -83,7 +85,7 @@ public class RegisterActivity extends AppCompatActivity {
                             public void onErrorResponse(VolleyError error) {
                                 Toast.makeText(getApplicationContext(),"Unable to register user. Check internet connection." ,Toast.LENGTH_LONG).show();
                                 error.printStackTrace();
-                                mProgress.dismiss();
+                                progressBar.setVisibility(View.INVISIBLE);
                                 requestQueue.stop();
 
                             }

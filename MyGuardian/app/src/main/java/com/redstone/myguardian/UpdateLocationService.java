@@ -41,7 +41,7 @@ public class UpdateLocationService extends Service {
     private static Timer timer = new Timer();
     LocationManager locationManager;
     private LocationListener listener;
-    String USERNAME = "tomekkubat";
+    String USERNAME;
 
     public UpdateLocationService() {
     }
@@ -54,7 +54,6 @@ public class UpdateLocationService extends Service {
 
     @Override
     public void onCreate() {
-       // Toast.makeText(this, "Invoke background service onCreate method.", Toast.LENGTH_LONG).show();
         super.onCreate();
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (ContextCompat.checkSelfPermission(UpdateLocationService.this,
@@ -90,7 +89,8 @@ public class UpdateLocationService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Notification notification = new NotificationCompat.Builder(this)
+        USERNAME = intent.getStringExtra("USERNAME");
+        Notification notification = new NotificationCompat.Builder(this, "redstoneChannel")
                 .setContentTitle("title")
                 .setContentText("text")
                 .setSmallIcon(R.drawable.my_guardian_logo)
@@ -102,25 +102,9 @@ public class UpdateLocationService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Toast.makeText(this, "Update Location stopped", Toast.LENGTH_LONG).show();
-    }
-
-    private void startService()
-    {
-        timer.scheduleAtFixedRate(new mainTask(), 0, 5000);
-    }
-
-
-    private class mainTask extends TimerTask
-    {
-        public void run()
-        {
-
-        }
     }
 
     void updateLocation(Location xy) {
-
         final Double x = xy.getLongitude();
         final Double y = xy.getLatitude();
         final RequestQueue requestQueue = Volley.newRequestQueue(UpdateLocationService.this);

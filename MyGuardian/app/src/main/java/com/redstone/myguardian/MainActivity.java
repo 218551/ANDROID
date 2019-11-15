@@ -87,11 +87,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                      requestFineLocationPermission();
         }
 
-        if (ContextCompat.checkSelfPermission(MainActivity.this,
-                Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    requestCoarseLocationPermission();
-        }
-
         listener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
@@ -120,10 +115,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             }
         };
-
-        Intent startServiceIntent = new Intent(MainActivity.this, UpdateLocationService.class);
-        startService(startServiceIntent);
-
 
         btnTrackView.setOnClickListener(new Button.OnClickListener() {
             @Override
@@ -467,6 +458,21 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .setNeutralButton("Cancel", null)
                 .create();
         dialog.show();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Intent startServiceIntent = new Intent(MainActivity.this, UpdateLocationService.class);
+        startServiceIntent.putExtra("USERNAME",USERNAME);
+        startService(startServiceIntent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Intent stopServiceIntent = new Intent(MainActivity.this, UpdateLocationService.class);
+        stopService(stopServiceIntent);
     }
 }
 

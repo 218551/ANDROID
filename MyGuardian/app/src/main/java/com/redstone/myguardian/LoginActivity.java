@@ -2,9 +2,13 @@ package com.redstone.myguardian;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.support.constraint.ConstraintLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -39,7 +43,8 @@ public class LoginActivity extends AppCompatActivity {
     Button btnRegister;
     EditText login;
     EditText password;
-    ProgressDialog mProgress;
+    ProgressBar progressBar;
+    ConstraintLayout mainLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,25 +54,23 @@ public class LoginActivity extends AppCompatActivity {
         btnRegister = (Button) findViewById(R.id.button2);
         login = (EditText) findViewById(R.id.inputLogin);
         password = (EditText) findViewById(R.id.inputPassword);
-
-        mProgress = new ProgressDialog(LoginActivity.this);
-        mProgress.setTitle("Processing...");
-        mProgress.setMessage("Please wait...");
-        mProgress.setCancelable(false);
-        mProgress.setIndeterminate(true);
-
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        mainLayout = (ConstraintLayout) findViewById(R.id.constraint);
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mProgress.show();
+
+                InputMethodManager imm = (InputMethodManager)getSystemService(LoginActivity.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(mainLayout.getWindowToken(), 0);
+                progressBar.setVisibility(View.VISIBLE);
                 final RequestQueue requestQueue = Volley.newRequestQueue(LoginActivity.this);
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, DbConstants.URL_LOGIN,
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
                                 try {
-                                    mProgress.dismiss();
+                                    progressBar.setVisibility(View.INVISIBLE);
                                     JSONObject jsonObject = new JSONObject(response);
                                     USER_ID = jsonObject.getInt("userid");
                                     USERNAME = jsonObject.getString("username");
@@ -92,7 +95,7 @@ public class LoginActivity extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(),"Unable to login. Check internet connection." ,Toast.LENGTH_LONG).show();
                                 error.printStackTrace();
                                 requestQueue.stop();
-                                mProgress.dismiss();
+                                progressBar.setVisibility(View.INVISIBLE);
                             }
                         }
 
@@ -122,12 +125,10 @@ public class LoginActivity extends AppCompatActivity {
 
     public String md5(String s) {
         try {
-            // Create MD5 Hash
             MessageDigest digest = java.security.MessageDigest.getInstance("MD5");
             digest.update(s.getBytes());
             byte messageDigest[] = digest.digest();
 
-            // Create Hex String
             StringBuffer hexString = new StringBuffer();
             for (int i=0; i<messageDigest.length; i++)
                 hexString.append(Integer.toHexString(0xFF & messageDigest[i]));
